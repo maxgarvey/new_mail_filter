@@ -5,15 +5,11 @@
   <link></link>
   <description>Non-reply email.</description>
   <item>
-   <sequence_number></sequence_number>
-   <title></title>
+   <sequence_number id="seq"></sequence_number>
+   <title id="subject"></title>
    <link></link>
-   <description></description>
+   <description id="body"></description>
    <date></date>
-   <subject></subject>
-   <!-- 
-   <body></body>
-   -->
   </item>
  </channel>
 </rss>
