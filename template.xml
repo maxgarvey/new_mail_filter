@@ -5,10 +5,10 @@
   <link></link>
   <description>Non-reply email.</description>
   <item>
-   <sequence_number id="seq"></sequence_number>
-   <title id="subject"></title>
+   <sequence_number></sequence_number>
+   <title></title>
    <link></link>
-   <description id="body"></description>
+   <description></description>
    <date></date>
   </item>
  </channel>

@@ -8,7 +8,7 @@ from rss import make_rss
 def process(email_string, args):
     '''determines if email is response, if not returns the subject and body 
     of the message'''
-    if args.is_file:
+    if args.is_file: #check to see if its a file
         try:
             with open(email_string, 'r') as fd:
                 email_string = fd.read()
@@ -17,11 +17,6 @@ def process(email_string, args):
             email_string = ''
 
     email_obj = email.message_from_string(email_string)
-
-    if email_obj.has_key('date'):
-        if args.verbose:
-            print 'email_obj.get_all("date"): {}'.format(email_obj.get_all('date'))
-        email_date = email_obj.get_all('date')
 
     if email_obj.has_key('in-reply-to'):
         #this will only be true if it's a response to another message
@@ -33,6 +28,14 @@ def process(email_string, args):
         return ''
 
     else:
+        if email_obj.has_key('date'):
+            if args.verbose:
+                print 'email_obj.get_all("date"): {}'.format(email_obj.get_all('date'))
+            email_date = email_obj.get_all('date')
+        else:
+            email_date = ''
+
+
         available_content_subtypes = []
         subject = email_obj.get_all('subject')[0]
         if args.verbose:
