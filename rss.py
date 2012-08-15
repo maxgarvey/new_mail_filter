@@ -133,43 +133,47 @@ def process(email_string, args):
 
 def update_rss(tree, params):
     '''takes params and obj, updates obj with params'''
-    with open(params['location'], 'w') as fd:
-        subject_node = tree.find('./channel/item/title')
+    subject_node = tree.find('./channel/item/title')
 
-        if params['verbose']:
-            print 'subject_node: {}'.format(subject_node.text)
+    if params['verbose']:
+        print 'subject_node: {}'.format(subject_node.text)
+        print 'params["subject"]: {}'.format(params['subject'])
 
-        subject_node = params['subject']
+    no_listserv_subject = str(params['subject'])
+    if no_listserv_subject.startswith('['):
+        no_listserv_subject = no_listserv_subject[(no_listserv_subject.index(']')+2):]
 
-        body_node = tree.find('./channel/item/description')
+    subject_node.text = no_listserv_subject
 
-        if params['verbose']:
-            print 'body_node: {}'.format(body_node.text)
+    body_node = tree.find('./channel/item/description')
 
-        body_node.text = params['body']
+    if params['verbose']:
+        print 'body_node: {}'.format(body_node.text)
 
-        sequence_number_node = tree.find('./channel/item/sequence_number')
+    body_node.text = params['body'].replace('_', '')
 
-        if params['verbose']:
-            print 'sequence_number: {}'.format(sequence_number_node.text)
+    sequence_number_node = tree.find('./channel/item/sequence_number')
 
-        if sequence_number_node.text != None:
-            seq_num = int(sequence_number_node.text)
-        else:
-            seq_num = 0
-        seq_num += 1
-        sequence_number_node.text = str(seq_num)
+    if params['verbose']:
+        print 'sequence_number: {}'.format(sequence_number_node.text)
 
-        date_node = tree.find('./channel/item/date')
-        if params['verbose']:
-             print 'date: {}'.format(date_node.text)
+    #if sequence_number_node.text != None:
+    #    seq_num = int(sequence_number_node.text)
+    #else:
+    #    seq_num = 0
+    #seq_num += 1
+    #sequence_number_node.text = str(seq_num)
 
-        date_node.text = params['date'][0]
+    date_node = tree.find('./channel/item/date')
+    if params['verbose']:
+        print 'date: {}'.format(date_node.text)
 
-        if params['verbose']:
-            print 'modified rss file:\n{}'.format(etree.dump(tree))
+    date_node.text = params['date'][0]
 
-        tree.write(params['location'])
+    if params['verbose']:
+        print 'modified rss file:\n{}'.format(etree.dump(tree))
+
+    tree.write(params['location'])
 
 def make_rss(params):
     '''takes a dict of params, and remakes the rss file if appropriate'''
