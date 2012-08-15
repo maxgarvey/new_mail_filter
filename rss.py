@@ -56,6 +56,9 @@ def process(email_string, args):
         subject = email_obj.get_all('subject')[0]
         if args.verbose:
             print 'subject: {}'.format(subject)
+        '''###########################'''
+        #Use email.Parser for this part. seems 2 work w sample email.
+        '''###########################'''
         if not email_obj.is_multipart():
             payload = email_obj.get_payload()
             body = payload
