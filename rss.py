@@ -60,14 +60,18 @@ def process(email_string, args):
         #Use email.Parser for this part. seems 2 work w sample email.
         '''###########################'''
         if not email_obj.is_multipart():
-            payload = email_obj.get_payload()
-            body = payload
+            partlist = []
+            for i in email_obj.walk():
+                partlist.append(i)
+            body = partlist[0]
         else:
-            payloads = email_obj.get_payload()
-            for load in payloads:
-                this_subtype = load.get_content_subtype()
+            parts = []
+            for i in email_obj.walk():
+                parts.append(i)
+            for part in parts:
+                this_subtype = part.get_content_subtype()
                 if this_subtype == args.content_type:
-                    body = load.get_payload()
+                    body = part.as_string()
                 else:
                     available_content_subtypes.append(this_subtype)
             if not vars().has_key('body'):
@@ -111,14 +115,24 @@ def process(email_string, args):
         if args.verbose:
             print 'subject: {}'.format(subject)
         if not email_obj.is_multipart():
-            payload = email_obj.get_payload()
-            body = payload
+            parts = []
+            for part in email_obj.walk():
+                if args.verbose:
+                    print '\nemail_part: {}'.format(part.get_payload())
+                parts.append(i)
+            body = parts[0].as_string()
         else:
-            payloads = email_obj.get_payload()
-            for load in payloads:
-                this_subtype = load.get_content_subtype()
-                if this_subtype == args.content_type:
-                    body = load.get_payload()
+            parts = []
+            for part in email_obj.walk():
+                if args.verbose:
+                    print '\nemail_part: {}'.format(part.get_payload())
+                parts.append(part)
+            for part in parts:
+                this_maintype = part.get_content_maintype()
+                this_subtype = part.get_content_subtype()
+                if this_maintype == 'text' and this_subtype == args.content_type:
+                    body = part.as_string()
+                    break
                 else:
                     available_content_subtypes.append(this_subtype)
             if not vars().has_key('body'):
