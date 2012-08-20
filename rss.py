@@ -1,7 +1,8 @@
-#!/usr/local/bin/python
+#!/usr/bin/python
 import xml.etree.ElementTree as etree
 from argparse import ArgumentParser
 from tempfile import TemporaryFile
+from hashlib import md5
 from sys import stdin
 import email
 import os
@@ -13,7 +14,7 @@ template = '''<?xml version="1.0" encoding="ISO-8859-1" ?>
   <link></link>
   <description>Non-reply email.</description>
   <item>
-   <sequence_number></sequence_number>
+   <id></id>
    <title></title>
    <link></link>
    <description></description>
@@ -56,9 +57,6 @@ def process(email_string, args):
         subject = email_obj.get_all('subject')[0]
         if args.verbose:
             print 'subject: {}'.format(subject)
-        '''###########################'''
-        #Use email.Parser for this part. seems 2 work w sample email.
-        '''###########################'''
         if not email_obj.is_multipart():
             partlist = []
             for i in email_obj.walk():
@@ -169,17 +167,21 @@ def update_rss(tree, params):
 
     body_node.text = params['body'].replace('_', '')
 
-    sequence_number_node = tree.find('./channel/item/sequence_number')
+    id_node = tree.find('./channel/item/id')
 
     if params['verbose']:
-        print 'sequence_number: {}'.format(sequence_number_node.text)
+        print 'id: {}'.format(id_node.text)
 
-    #if sequence_number_node.text != None:
-    #    seq_num = int(sequence_number_node.text)
-    #else:
-    #    seq_num = 0
-    #seq_num += 1
-    #sequence_number_node.text = str(seq_num)
+    if subject_node.text != None:
+        sha_obj = md5()
+        print 'subject_node.text: {}'.format(subject_node.text) #debug
+        sha_obj.update(subject_node.text)
+        this_id = sha_obj.digest()
+    else:
+        this_id = ''
+    print 'type(this_id): {}'.format(type(this_id)) #debug
+    #print 'this_id.is_ascii(): {}'.format(this_id.is_ascii()) #debug
+    id_node.text = this_id.decode("utf-8","replace")
 
     date_node = tree.find('./channel/item/date')
     if params['verbose']:
@@ -190,6 +192,7 @@ def update_rss(tree, params):
     if params['verbose']:
         print 'modified rss file:\n{}'.format(etree.dump(tree))
 
+    #print 'params["location"]: {}'.format(params['location'])#debug
     tree.write(params['location'])
 
 def make_rss(params):
