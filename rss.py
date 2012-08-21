@@ -176,7 +176,7 @@ def update_rss(tree, params):
         sha_obj = md5()
         print 'subject_node.text: {0}'.format(subject_node.text) #debug
         sha_obj.update(subject_node.text)
-        this_id = sha_obj.digest()
+        this_id = sha_obj.hexdigest()
     else:
         this_id = ''
     print 'type(this_id): {0}'.format(type(this_id)) #debug
