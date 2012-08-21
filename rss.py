@@ -40,7 +40,7 @@ def process(email_string, args):
         #this will only be true if it's a response to another message
         if args.verbose:
             try:
-                print 'message with subject {} is a response'.format(email_obj.get_all('subject'))
+                print 'message with subject {0} is a response'.format(email_obj.get_all('subject'))
             except:
                 print 'message is a response... no subject header'
         return ''
@@ -48,7 +48,7 @@ def process(email_string, args):
     else:
         if email_obj.has_key('date'):
             if args.verbose:
-                print 'email_obj.get_all("date"): {}'.format(email_obj.get_all('date'))
+                print 'email_obj.get_all("date"): {0}'.format(email_obj.get_all('date'))
             email_date = email_obj.get_all('date')
         else:
             email_date = ''
@@ -56,7 +56,7 @@ def process(email_string, args):
         available_content_subtypes = []
         subject = email_obj.get_all('subject')[0]
         if args.verbose:
-            print 'subject: {}'.format(subject)
+            print 'subject: {0}'.format(subject)
         if not email_obj.is_multipart():
             partlist = []
             for i in email_obj.walk():
@@ -95,7 +95,7 @@ def process(email_string, args):
         #this will only be true if it's a response to another message
         if args.verbose:
             try:
-                print 'message with subject {} is a response'.format(email_obj.get_all('subject'))
+                print 'message with subject {0} is a response'.format(email_obj.get_all('subject'))
             except:
                 print 'message is a response... no subject header'
         return ''
@@ -103,7 +103,7 @@ def process(email_string, args):
     else:
         if email_obj.has_key('date'):
             if args.verbose:
-                print 'email_obj.get_all("date"): {}'.format(email_obj.get_all('date'))
+                print 'email_obj.get_all("date"): {0}'.format(email_obj.get_all('date'))
             email_date = email_obj.get_all('date')
         else:
             email_date = ''
@@ -111,19 +111,19 @@ def process(email_string, args):
         available_content_subtypes = []
         subject = email_obj.get_all('subject')[0]
         if args.verbose:
-            print 'subject: {}'.format(subject)
+            print 'subject: {0}'.format(subject)
         if not email_obj.is_multipart():
             parts = []
             for part in email_obj.walk():
                 if args.verbose:
-                    print '\nemail_part: {}'.format(part.get_payload())
+                    print '\nemail_part: {0}'.format(part.get_payload())
                 parts.append(i)
             body = parts[0].as_string()
         else:
             parts = []
             for part in email_obj.walk():
                 if args.verbose:
-                    print '\nemail_part: {}'.format(part.get_payload())
+                    print '\nemail_part: {0}'.format(part.get_payload())
                 parts.append(part)
             for part in parts:
                 this_maintype = part.get_content_maintype()
@@ -141,7 +141,7 @@ def process(email_string, args):
         rss_params = {'subject': subject, 'body': body, 'date': email_date, 'location': args.rss_path, 'verbose': args.verbose}
 
         if args.verbose:
-            print 'rss_params:\n{}'.format(rss_params)
+            print 'rss_params:\n{0}'.format(rss_params)
         make_rss(rss_params)
 
         return {'subject': subject, 'body': body}
@@ -151,8 +151,8 @@ def update_rss(tree, params):
     subject_node = tree.find('./channel/item/title')
 
     if params['verbose']:
-        print 'subject_node: {}'.format(subject_node.text)
-        print 'params["subject"]: {}'.format(params['subject'])
+        print 'subject_node: {0}'.format(subject_node.text)
+        print 'params["subject"]: {0}'.format(params['subject'])
 
     no_listserv_subject = str(params['subject'])
     if no_listserv_subject.startswith('['):
@@ -163,36 +163,36 @@ def update_rss(tree, params):
     body_node = tree.find('./channel/item/description')
 
     if params['verbose']:
-        print 'body_node: {}'.format(body_node.text)
+        print 'body_node: {0}'.format(body_node.text)
 
     body_node.text = params['body'].replace('_', '')
 
     id_node = tree.find('./channel/item/id')
 
     if params['verbose']:
-        print 'id: {}'.format(id_node.text)
+        print 'id: {0}'.format(id_node.text)
 
     if subject_node.text != None:
         sha_obj = md5()
-        print 'subject_node.text: {}'.format(subject_node.text) #debug
+        print 'subject_node.text: {0}'.format(subject_node.text) #debug
         sha_obj.update(subject_node.text)
         this_id = sha_obj.digest()
     else:
         this_id = ''
-    print 'type(this_id): {}'.format(type(this_id)) #debug
-    #print 'this_id.is_ascii(): {}'.format(this_id.is_ascii()) #debug
+    print 'type(this_id): {0}'.format(type(this_id)) #debug
+    #print 'this_id.is_ascii(): {0}'.format(this_id.is_ascii()) #debug
     id_node.text = this_id.decode("utf-8","replace")
 
     date_node = tree.find('./channel/item/date')
     if params['verbose']:
-        print 'date: {}'.format(date_node.text)
+        print 'date: {0}'.format(date_node.text)
 
     date_node.text = params['date'][0]
 
     if params['verbose']:
-        print 'modified rss file:\n{}'.format(etree.dump(tree))
+        print 'modified rss file:\n{0}'.format(etree.dump(tree))
 
-    #print 'params["location"]: {}'.format(params['location'])#debug
+    #print 'params["location"]: {0}'.format(params['location'])#debug
     tree.write(params['location'])
 
 def make_rss(params):
@@ -226,7 +226,7 @@ def make_rss(params):
         if current_subject.text is not params['subject'] and \
             current_body.text is not params['body']:
             if params['verbose']:
-                 print 'tree: {}'.format(etree.dump(tree))
+                 print 'tree: {0}'.format(etree.dump(tree))
             update_rss(tree, params)
 
 if __name__ == "__main__":
@@ -264,7 +264,7 @@ if __name__ == "__main__":
 
     #print if verbose
     if args.verbose:
-        print 'args: {}'.format(args)
+        print 'args: {0}'.format(args)
 
     #if we enter an email string parameter, print it 
     #out like so and pass to process
