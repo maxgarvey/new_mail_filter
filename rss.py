@@ -117,7 +117,7 @@ def process(email_string, args):
             for part in email_obj.walk():
                 if args.verbose:
                     print '\nemail_part: {0}'.format(part.get_payload())
-                parts.append(i)
+                parts.append(part)
             body = parts[0].as_string()
         else:
             parts = []
