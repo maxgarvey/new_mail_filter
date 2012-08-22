@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python26
 import xml.etree.ElementTree as etree
 from argparse import ArgumentParser
 from tempfile import TemporaryFile
